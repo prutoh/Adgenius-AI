@@ -14,6 +14,7 @@ function PricingContent() {
   const router = useRouter()
   const highlightedPlan = searchParams.get('plan')
   const [setupMessage, setSetupMessage] = useState<string | null>(null)
+  const currentPlanId = profile?.plan_id || 'free'
 
   function handleFreePlan() {
     if (isAuthenticated) {
@@ -82,16 +83,19 @@ function PricingContent() {
                 </ul>
                 
                 <div className="mt-auto">
-                  {plan.price === 0 ? (
-                    isAuthenticated ? (
-                      <Button variant="secondary" className="w-full" size="lg" disabled>
-                        Current Plan
-                      </Button>
-                    ) : (
-                      <Button variant="outline" className="w-full" size="lg" onClick={handleFreePlan}>
-                        Get Started Free
-                      </Button>
-                    )
+                  {plan.id === currentPlanId ? (
+                    <Button variant="secondary" className="w-full" size="lg" disabled>
+                      Current Plan
+                    </Button>
+                  ) : !isAuthenticated ? (
+                    <Button 
+                      variant={isHighlighted ? 'primary' : 'secondary'} 
+                      className="w-full" 
+                      size="lg" 
+                      onClick={() => plan.price === 0 ? handleFreePlan() : handleUpgrade(plan.id)}
+                    >
+                      {plan.price === 0 ? 'Get Started Free' : `Choose ${plan.name}`}
+                    </Button>
                   ) : (
                     <Button 
                       variant={isHighlighted ? 'primary' : 'secondary'} 
@@ -99,7 +103,7 @@ function PricingContent() {
                       size="lg" 
                       onClick={() => handleUpgrade(plan.id)}
                     >
-                      Upgrade to {plan.name}
+                      {plan.price < PLANS.find(p => p.id === currentPlanId)!.price ? 'Downgrade' : `Upgrade to ${plan.name}`}
                     </Button>
                   )}
 
