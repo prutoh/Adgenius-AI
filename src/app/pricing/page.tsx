@@ -24,7 +24,7 @@ function PricingContent() {
   }
 
   function handleUpgrade(planId: string) {
-    if (!isAuthenticated || !profile) {
+    if (!isAuthenticated) {
       router.push(`/signup?redirect=/pricing?plan=${planId}`)
       return
     }
