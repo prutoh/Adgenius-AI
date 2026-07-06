@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { PLAN_LIMITS, FREE_TIER_LIMIT } from '@/lib/utils/constants'
+import { ensureProfile } from '@/lib/utils/ensure-profile'
 import type { UsageInfo, PlanId } from '@/types'
 
 export async function GET() {
@@ -15,16 +16,34 @@ export async function GET() {
       )
     }
 
-    // Get user plan
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('plan_id')
-      .eq('id', user.id)
-      .single()
+    // Get or create user profile
+    const profile = await ensureProfile(user)
+    let planId = (profile?.plan_id as PlanId) || 'free'
 
-        const planId = (profile?.plan_id as PlanId) || 'free'
-    
-    // Correctly check if the plan exists in our limits list, fallback to free if not
+    // Validate paid plans against the subscriptions table to prevent manipulation.
+    // If the user has ANY subscription records, enforce the active subscription's plan.
+    // If they have NO subscriptions at all (e.g. admin-granted via SQL), trust profile.plan_id.
+    if (planId !== 'free') {
+      const { data: allSubs } = await supabase
+        .from('subscriptions')
+        .select('plan_id, status, current_period_end')
+        .eq('user_id', user.id)
+
+      if (allSubs && allSubs.length > 0) {
+        // User has subscription records — validate against them
+        const activeSub = allSubs.find(
+          (s: any) => s.status === 'active' && (!s.current_period_end || new Date(s.current_period_end) >= new Date())
+        )
+        if (activeSub) {
+          planId = activeSub.plan_id as PlanId
+        } else {
+          // Has subscriptions but none are active/valid — fall back to free
+          planId = 'free'
+        }
+      }
+      // No subscription records exist — trust profile.plan_id (admin-granted plan)
+    }
+
     const limit = planId in PLAN_LIMITS ? PLAN_LIMITS[planId] : FREE_TIER_LIMIT
 
     // Calculate start of current month
@@ -40,8 +59,6 @@ export async function GET() {
       .gte('created_at', startOfMonth.toISOString())
 
     const used = count || 0
-    
-    // Correctly calculate remaining (can be null if limit is null/unlimited)
     const remaining = limit === null ? null : Math.max(0, limit - used)
 
     const usageInfo: UsageInfo = {

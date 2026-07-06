@@ -139,8 +139,8 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm text-gray-500">Current Plan</p>
                 <div className="flex items-center gap-2">
-                  <p className="text-2xl font-bold text-gray-900 capitalize">{usage.plan}</p>
-                  {usage.plan === 'free' && <Link href="/pricing"><Badge variant="info" className="cursor-pointer">Upgrade</Badge></Link>}
+                  <p className="text-2xl font-bold text-gray-900 capitalize">{profile?.plan_id || usage.plan}</p>
+                  {(profile?.plan_id || usage.plan) === 'free' && <Link href="/pricing"><Badge variant="info" className="cursor-pointer">Upgrade</Badge></Link>}
                 </div>
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function DashboardPage() {
                 <Link href="/api-dashboard/api-keys">
                   <Button className="w-full justify-start" variant="outline"><Key className="h-4 w-4" />API Access</Button>
                 </Link>
-                {(usage.plan || 'free').toLowerCase() === 'free' && <Link href="/pricing"><Button className="w-full justify-start" variant="outline"><CreditCard className="h-4 w-4" />Upgrade Plan</Button></Link>}
+                {(profile?.plan_id || 'free').toLowerCase() === 'free' && <Link href="/pricing"><Button className="w-full justify-start" variant="outline"><CreditCard className="h-4 w-4" />Upgrade Plan</Button></Link>}
               </div>
             </Card>
           </div>

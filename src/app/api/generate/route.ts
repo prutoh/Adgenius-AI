@@ -2,7 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { generateRealEstateAd } from '@/lib/ai/gemini'
 import { PLAN_LIMITS } from '@/lib/utils/constants'
-import type { PropertyInput, PlanId } from '@/types'
+import { ensureProfile } from '@/lib/utils/ensure-profile'
+import type { PropertyInput, PlanId, Platform } from '@/types'
+
+/**
+ * Platforms available per plan.
+ * Free users are restricted to Instagram & TikTok only.
+ */
+const PLAN_PLATFORMS: Record<PlanId, Platform[]> = {
+  free: ['instagram', 'tiktok'],
+  pro: ['instagram', 'tiktok', 'facebook', 'twitter', 'linkedin'],
+  unlimited: ['instagram', 'tiktok', 'facebook', 'twitter', 'linkedin'],
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,14 +28,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 2. Get User Profile & Check Limits
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('plan_id')
-      .eq('id', user.id)
-      .single()
+    // 2. Get or Create User Profile & Validate Plan
+    const profile = await ensureProfile(user)
+    let planId = (profile?.plan_id as PlanId) || 'free'
 
-    const planId = (profile?.plan_id as PlanId) || 'free'
+    // Validate paid plans against the subscriptions table to prevent manipulation.
+    // If the user has ANY subscription records, enforce the active subscription's plan.
+    // If they have NO subscriptions at all (e.g. admin-granted via SQL), trust profile.plan_id.
+    if (planId !== 'free') {
+      const { data: allSubs } = await supabase
+        .from('subscriptions')
+        .select('plan_id, status, current_period_end')
+        .eq('user_id', user.id)
+
+      if (allSubs && allSubs.length > 0) {
+        const activeSub = allSubs.find(
+          (s: any) => s.status === 'active' && (!s.current_period_end || new Date(s.current_period_end) >= new Date())
+        )
+        if (activeSub) {
+          planId = activeSub.plan_id as PlanId
+        } else {
+          planId = 'free'
+        }
+      }
+    }
+
     const limit = PLAN_LIMITS[planId]
 
     if (limit !== null) {
@@ -54,6 +82,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Missing required fields: location, price, property_type' },
         { status: 400 }
+      )
+    }
+
+    // 3b. Server-side platform restriction based on plan
+    const allowedPlatforms = PLAN_PLATFORMS[planId]
+    if (allowedPlatforms && !allowedPlatforms.includes(body.target_platform)) {
+      return NextResponse.json(
+        { error: `Platform "${body.target_platform}" is not available on your current plan. Upgrade to Pro or Unlimited to access all platforms.` },
+        { status: 403 }
       )
     }
 

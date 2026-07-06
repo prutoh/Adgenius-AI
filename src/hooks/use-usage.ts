@@ -41,6 +41,13 @@ export function useUsage() {
 
   useEffect(() => {
     fetchUsage()
+
+    // Refetch every 30s so plan changes (e.g. via SQL) reflect in the UI
+    const interval = setInterval(() => {
+      fetchUsage()
+    }, 30000)
+
+    return () => clearInterval(interval)
   }, [fetchUsage])
 
   const incrementUsage = useCallback(() => {

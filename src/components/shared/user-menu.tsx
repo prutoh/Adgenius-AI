@@ -39,7 +39,7 @@ export function UserMenu() {
     )
   }
 
-  if (!isAuthenticated || !profile) {
+  if (!isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
         <Link href="/login">
@@ -66,10 +66,10 @@ export function UserMenu() {
         className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
       >
         <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center">
-          {profile.avatar_url ? (
+          {profile?.avatar_url ? (
             <img
               src={profile.avatar_url}
-              alt={profile.full_name || 'User'}
+              alt={profile?.full_name || 'User'}
               className="w-8 h-8 rounded-full object-cover"
             />
           ) : (
@@ -77,7 +77,7 @@ export function UserMenu() {
           )}
         </div>
         <span className="hidden sm:block text-sm font-medium text-gray-700 max-w-[100px] truncate">
-          {profile.full_name || (user?.email?.split('@')[0] ?? 'User')}
+          {profile?.full_name || (user?.email?.split('@')[0] ?? 'User')}
         </span>
         <ChevronDown className={cn(
           'h-4 w-4 text-gray-400 transition-transform',
@@ -89,18 +89,18 @@ export function UserMenu() {
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 animate-fade-in z-50">
           <div className="px-4 py-2 border-b border-gray-100">
             <p className="text-sm font-medium text-gray-900 truncate">
-              {profile.full_name || 'User'}
+              {profile?.full_name || 'User'}
             </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             <span className={cn(
               'inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium',
-              profile.plan_id === 'free'
+              (profile?.plan_id || 'free') === 'free'
                 ? 'bg-gray-100 text-gray-600'
-                : profile.plan_id === 'pro'
+                : (profile?.plan_id || 'free') === 'pro'
                   ? 'bg-brand-100 text-brand-700'
                   : 'bg-purple-100 text-purple-700'
             )}>
-              {profile.plan_id.charAt(0).toUpperCase() + profile.plan_id.slice(1)} Plan
+              {(profile?.plan_id || 'free').charAt(0).toUpperCase() + (profile?.plan_id || 'free').slice(1)} Plan
             </span>
           </div>
 

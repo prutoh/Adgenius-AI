@@ -38,21 +38,6 @@ export function Navbar() {
 
   const { theme, setTheme } = useTheme()
 
-  {isHomePage && (
-  <div className="hidden md:flex items-center gap-2">
-    <button
-      onClick={() => {
-        if (theme === 'light') setTheme('dark')
-        else if (theme === 'dark') setTheme('light')
-        else setTheme('system')
-      }}
-      className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-    >
-      {theme === 'dark' ? <Sun className="h-5 w-5" /> : theme === 'light' ? <Moon className="h-5 w-5" /> : <Monitor className="h-5 w-5" />}
-    </button>
-  </div>
-)}
-
   return (
     <nav
       className={cn(
@@ -95,6 +80,18 @@ export function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            {isHomePage && (
+              <button
+                onClick={() => {
+                  if (theme === 'light') setTheme('dark')
+                  else if (theme === 'dark') setTheme('light')
+                  else setTheme('system')
+                }}
+                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : theme === 'light' ? <Moon className="h-5 w-5" /> : <Monitor className="h-5 w-5" />}
+              </button>
+            )}
             <UserMenu />
           </div>
 

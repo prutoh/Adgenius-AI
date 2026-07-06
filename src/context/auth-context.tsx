@@ -37,6 +37,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (data) {
       setProfile(data as UserProfile)
+    } else {
+      // Profile row doesn't exist — create it automatically
+      const { data: userData } = await supabase.auth.getUser()
+      const email = userData?.user?.email || ''
+
+      const { data: newProfile, error: insertError } = await supabase
+        .from('profiles')
+        .insert({
+          id: userId,
+          email: email,
+          full_name: userData?.user?.user_metadata?.full_name || null,
+          avatar_url: userData?.user?.user_metadata?.avatar_url || null,
+          plan_id: 'free',
+        })
+        .select('*')
+        .single()
+
+      if (newProfile && !insertError) {
+        setProfile(newProfile as UserProfile)
+      }
     }
   }
 
@@ -81,6 +101,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       subscription.unsubscribe()
     }
   }, [supabase])
+
+  // Periodically refresh profile (every 30s) so DB changes reflect without re-login
+  useEffect(() => {
+    if (!user) return
+
+    const interval = setInterval(async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (data) {
+        setProfile(data as UserProfile)
+      }
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [user, supabase])
 
   return (
     <AuthContext.Provider value={{ user, profile, session, isLoading, refreshProfile }}>
