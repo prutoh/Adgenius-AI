@@ -119,7 +119,7 @@ export function UserMenu() {
               <Settings className="h-4 w-4" />
               Dashboard
             </Link>
-            {(profile?.plan_id || 'free') !== 'unlimited' && (
+            {(profile?.plan_id || 'free') === 'free' && (
               <Link
                 href="/pricing"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"

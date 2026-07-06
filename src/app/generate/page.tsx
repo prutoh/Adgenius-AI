@@ -32,7 +32,7 @@ export default function GeneratePage() {
       const customEvent = e as CustomEvent
       const input = customEvent.detail as PropertyInput
 
-      if (hasReachedLimit) {
+      if (hasReachedLimit && planId === 'free') {
         setShowPaywall(true)
         return
       }
@@ -43,16 +43,19 @@ export default function GeneratePage() {
 
     window.addEventListener('start-generation', handleGenerationEvent)
     return () => window.removeEventListener('start-generation', handleGenerationEvent)
-  }, [generate, hasReachedLimit, incrementUsage])
+  }, [generate, hasReachedLimit, incrementUsage, planId])
 
   // ADD THIS NEW LISTENER FOR THE PLATFORM LOCK:
   useEffect(() => {
     function handleShowPaywall() {
-      setShowPaywall(true)
+      // Only show paywall for free users - paid plans have full access
+      if (planId === 'free') {
+        setShowPaywall(true)
+      }
     }
     window.addEventListener('show-paywall', handleShowPaywall)
     return () => window.removeEventListener('show-paywall', handleShowPaywall)
-  }, [])
+  }, [planId])
 
   if (authLoading) {
     return (
