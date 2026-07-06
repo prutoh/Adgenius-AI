@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/badge'
 import { Loader } from '@/components/ui/loader'
 import { CopyButton } from '@/components/generate/copy-button'
 import { getRelativeTime } from '@/lib/utils/helpers'
-import { FileText, ArrowLeft, Search } from 'lucide-react'
+import { FileText, ArrowLeft, Search, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { PLATFORM_LABELS } from '@/types/ai'
+import { Button } from '@/components/ui/button'
 
 interface Generation {
   id: string
@@ -22,7 +23,7 @@ interface Generation {
 }
 
 export default function HistoryPage() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, planId } = useAuth()
   const [generations, setGenerations] = useState<Generation[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -50,6 +51,23 @@ export default function HistoryPage() {
 
   if (authLoading || isLoading) return <div className="min-h-screen flex items-center justify-center pt-16"><Loader size="lg" text="Loading history..." /></div>
   if (!isAuthenticated) return null
+
+  // Generation history is a Pro/Unlimited feature
+  const isPaid = planId === 'pro' || planId === 'unlimited'
+  if (!isPaid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-16 px-4">
+        <Card variant="bordered" padding="lg" className="max-w-md w-full text-center">
+          <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Pro Feature</h1>
+          <p className="text-gray-600 text-sm mb-6">
+            Generation history is available on Pro and Unlimited plans. Upgrade to view all your past ad copies.
+          </p>
+          <Button onClick={() => router.push('/pricing')}>View Pricing</Button>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12">

@@ -8,11 +8,12 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!)
  * Generate real estate ad copy using Gemini AI
  */
 export async function generateRealEstateAd(
-  input: PropertyInput
+  input: PropertyInput,
+  branding?: { brand_name: string; brand_tagline?: string; brand_website?: string; brand_cta?: string; brand_voice?: string } | null
 ): Promise<ReadableStream<Uint8Array>> {
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-  const prompt = buildRealEstatePrompt(input)
+  const prompt = buildRealEstatePrompt({ ...input, branding })
 
   const result = await model.generateContentStream(prompt)
 

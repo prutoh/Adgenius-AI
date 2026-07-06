@@ -67,8 +67,8 @@ export const PLANS: Plan[] = [
       'All tones & templates',
       'Generation history',
       'Priority support',
-      'API access (coming soon)',
-      'Custom branding (coming soon)',
+      'API access',
+      'Custom branding',
     ],
   },
 ]

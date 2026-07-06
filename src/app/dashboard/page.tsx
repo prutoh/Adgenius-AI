@@ -12,7 +12,7 @@ import { Loader } from '@/components/ui/loader'
 import { Input } from '@/components/ui/input'
 import { CopyButton } from '@/components/generate/copy-button'
 import { getRelativeTime } from '@/lib/utils/helpers'
-import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key } from 'lucide-react'
+import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key, Clock, Headphones, Palette } from 'lucide-react'
 import Link from 'next/link'
 
 interface Generation {
@@ -168,7 +168,23 @@ export default function DashboardPage() {
                 <Link href="/api-dashboard/api-keys">
                   <Button className="w-full justify-start" variant="outline"><Key className="h-4 w-4" />API Access</Button>
                 </Link>
-                {(profile?.plan_id || 'free').toLowerCase() === 'free' && <Link href="/pricing"><Button className="w-full justify-start" variant="outline"><CreditCard className="h-4 w-4" />Upgrade Plan</Button></Link>}
+                {(profile?.plan_id || 'free') === 'pro' || (profile?.plan_id || 'free') === 'unlimited' ? (
+                  <>
+                    <Link href="/history">
+                      <Button className="w-full justify-start" variant="outline"><Clock className="h-4 w-4" />Generation History</Button>
+                    </Link>
+                    <Link href="/support">
+                      <Button className="w-full justify-start" variant="outline"><Headphones className="h-4 w-4" />Priority Support</Button>
+                    </Link>
+                    {(profile?.plan_id || 'free') === 'unlimited' && (
+                      <Link href="/branding">
+                        <Button className="w-full justify-start" variant="outline"><Palette className="h-4 w-4" />Custom Branding</Button>
+                      </Link>
+                    )}
+                  </>
+                ) : (
+                  <Link href="/pricing"><Button className="w-full justify-start" variant="outline"><CreditCard className="h-4 w-4" />Upgrade Plan</Button></Link>
+                )}
               </div>
             </Card>
           </div>

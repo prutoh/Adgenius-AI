@@ -85,7 +85,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3b. Server-side platform restriction based on plan
+    // 3b. Fetch branding settings for unlimited users
+    let branding: { brand_name: string; brand_tagline?: string; brand_website?: string; brand_cta?: string; brand_voice?: string } | null = null
+    if (planId === 'unlimited') {
+      const { data: brandingData } = await supabase
+        .from('branding')
+        .select('brand_name, brand_tagline, brand_website, brand_cta, brand_voice, include_branding')
+        .eq('user_id', user.id)
+        .single()
+
+      if (brandingData && brandingData.include_branding && brandingData.brand_name) {
+        branding = {
+          brand_name: brandingData.brand_name,
+          brand_tagline: brandingData.brand_tagline || undefined,
+          brand_website: brandingData.brand_website || undefined,
+          brand_cta: brandingData.brand_cta || undefined,
+          brand_voice: brandingData.brand_voice || undefined,
+        }
+      }
+    }
+
+    // 3c. Server-side platform restriction based on plan
     const allowedPlatforms = PLAN_PLATFORMS[planId]
     if (allowedPlatforms && !allowedPlatforms.includes(body.target_platform)) {
       return NextResponse.json(
@@ -101,7 +121,7 @@ export async function POST(request: NextRequest) {
     })
 
     // 5. Generate AI Stream
-    const stream = await generateRealEstateAd(body)
+    const stream = await generateRealEstateAd(body, branding)
 
     // 6. Save generation to history asynchronously (fire and forget)
     // We buffer the stream to save the final text to the database

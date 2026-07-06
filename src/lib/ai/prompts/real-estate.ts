@@ -86,9 +86,29 @@ export function buildRealEstatePrompt(input: {
   additional_notes?: string
   land_size?: string
   land_size_unit?: string
+  branding?: {
+    brand_name: string
+    brand_tagline?: string
+    brand_website?: string
+    brand_cta?: string
+    brand_voice?: string
+  } | null
 }): string {
   const platformInstruction = PLATFORM_INSTRUCTIONS[input.target_platform] || PLATFORM_INSTRUCTIONS.instagram
   const toneInstruction = TONE_INSTRUCTIONS[input.tone] || TONE_INSTRUCTIONS.professional
+
+  let brandingBlock = ''
+  if (input.branding && input.branding.brand_name) {
+    brandingBlock = `
+BRAND IDENTITY (incorporate naturally into the ad copy):
+- Brand Name: ${input.branding.brand_name}
+${input.branding.brand_tagline ? `- Tagline: "${input.branding.brand_tagline}"` : ''}
+${input.branding.brand_website ? `- Website: ${input.branding.brand_website}` : ''}
+${input.branding.brand_cta ? `- Call-to-Action: "${input.branding.brand_cta}"` : ''}
+${input.branding.brand_voice ? `- Brand Voice: ${input.branding.brand_voice}` : ''}
+
+IMPORTANT: Weave the brand name and identity naturally into the ad. Use the custom CTA instead of a generic one. The ad should feel like it comes from this brand.`
+  }
 
   return `${REAL_ESTATE_SYSTEM_PROMPT}
 
@@ -97,6 +117,7 @@ PLATFORM: ${input.target_platform.toUpperCase()}
 
 TONE: ${input.tone.toUpperCase()}
  ${toneInstruction}
+${brandingBlock}
 
 PROPERTY DETAILS:
 - Type: ${input.property_type}
