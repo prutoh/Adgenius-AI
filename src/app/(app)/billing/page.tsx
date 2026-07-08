@@ -71,7 +71,7 @@ export default function BillingPage() {
   const isPaid = planId === 'pro' || planId === 'unlimited'
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -86,8 +86,8 @@ export default function BillingPage() {
               <Receipt className="h-6 w-6 text-brand-600" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Billing & Invoices</h1>
-              <p className="text-gray-600 mt-0.5">View your payment history and download invoices.</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Billing & Invoices</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-0.5">View your payment history and download invoices.</p>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default function BillingPage() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p className="text-sm text-gray-500 mb-1">Current Plan</p>
-              <p className="text-xl font-bold text-gray-900 capitalize">
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize">
                 {planId === 'free' ? 'Free' : planId} Plan
               </p>
             </div>
@@ -113,7 +113,7 @@ export default function BillingPage() {
 
         {/* Invoices List */}
         <Card variant="bordered" padding="md">
-          <h2 className="font-semibold text-gray-900 mb-4">Invoice History</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice History</h2>
 
           {isLoadingInvoices ? (
             <div className="py-8">
@@ -139,7 +139,7 @@ export default function BillingPage() {
               <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200">
+                    <tr className="border-b border-gray-200 dark:border-gray-800">
                       <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider pb-3 pr-4">
                         Invoice
                       </th>
@@ -164,14 +164,14 @@ export default function BillingPage() {
                     {invoices.map((invoice) => {
                       const status = statusConfig[invoice.status] || statusConfig.pending
                       return (
-                        <tr key={invoice.id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={invoice.id} className="hover:bg-gray-50 dark:bg-gray-950 transition-colors">
                           <td className="py-3.5 pr-4">
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                               {invoice.invoice_number}
                             </span>
                           </td>
                           <td className="py-3.5 pr-4">
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
                               {new Date(invoice.created_at).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'short',
@@ -180,7 +180,7 @@ export default function BillingPage() {
                             </span>
                           </td>
                           <td className="py-3.5 pr-4">
-                            <span className="text-sm text-gray-700 capitalize">
+                            <span className="text-sm text-gray-700 dark:text-gray-300 capitalize">
                               {invoice.plan_id}{' '}
                               <span className="text-gray-400 text-xs">
                                 ({invoice.interval})
@@ -188,7 +188,7 @@ export default function BillingPage() {
                             </span>
                           </td>
                           <td className="py-3.5 pr-4">
-                            <span className="text-sm font-semibold text-gray-900">
+                            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                               ${invoice.amount.toFixed(2)}
                             </span>
                           </td>
@@ -214,10 +214,10 @@ export default function BillingPage() {
                   return (
                     <div
                       key={invoice.id}
-                      className="p-4 bg-gray-50 rounded-lg border border-gray-100"
+                      className="p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border border-gray-100"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           {invoice.invoice_number}
                         </span>
                         <Badge variant={status.variant}>{status.label}</Badge>
@@ -231,12 +231,12 @@ export default function BillingPage() {
                               day: 'numeric',
                             })}
                           </p>
-                          <p className="text-sm text-gray-700 capitalize">
+                          <p className="text-sm text-gray-700 dark:text-gray-300 capitalize">
                             {invoice.plan_id} &middot; {invoice.interval}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-semibold text-gray-900">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                             ${invoice.amount.toFixed(2)}
                           </p>
                           <Button variant="ghost" size="sm" icon={<Download className="h-3 w-3" />}>

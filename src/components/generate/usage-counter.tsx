@@ -19,7 +19,7 @@ export function UsageCounter() {
   const isFree = usage.plan === 'free'
   const percentage = usage.limit ? (usage.used / usage.limit) * 100 : 0
   const isLow = usage.remaining !== null && usage.remaining <= 1
-  const colorClass = isLow ? 'text-red-600' : 'text-gray-600'
+  const colorClass = isLow ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'
 
   return (
     <div className="flex items-center gap-3">
@@ -32,7 +32,7 @@ export function UsageCounter() {
       
       {isFree && (
         <div className="flex items-center gap-2">
-          <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="w-24 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${
                 percentage >= 100 ? 'bg-red-500' : percentage >= 66 ? 'bg-yellow-500' : 'bg-brand-500'

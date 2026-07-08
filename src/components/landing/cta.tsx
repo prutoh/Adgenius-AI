@@ -14,7 +14,7 @@ export function CTA() {
   return (
     <section className="py-24 bg-gradient-to-br from-brand-600 to-brand-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900/10 rounded-full mb-8">
           <Sparkles className="h-4 w-4 text-brand-200" />
           <span className="text-sm text-brand-100">Free to start - No credit card required</span>
         </div>
@@ -30,7 +30,7 @@ export function CTA() {
         <a href={targetUrl}>
           <Button
             size="lg"
-            className="text-base px-8 bg-white text-brand-700 hover:bg-brand-50"
+            className="text-base px-8 bg-white dark:bg-gray-900 text-brand-700 hover:bg-brand-50"
           >
             {buttonText}
             <ArrowRight className="h-5 w-5" />

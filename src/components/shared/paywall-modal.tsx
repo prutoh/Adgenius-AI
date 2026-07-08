@@ -30,19 +30,19 @@ export function PaywallModal({ isOpen, onClose, usedGenerations }: PaywallModalP
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-8 animate-slide-up">
+      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-8 animate-slide-up">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 rounded-lg hover:bg-gray-100 transition-colors"
+          className="absolute top-4 right-4 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
-          <X className="h-5 w-5 text-gray-500" />
+          <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
         </button>
 
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Sparkles className="h-8 w-8 text-brand-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             You&apos;ve used all {FREE_TIER_LIMIT} free generations
           </h2>
           <p className="text-gray-500">
@@ -67,26 +67,26 @@ export function PaywallModal({ isOpen, onClose, usedGenerations }: PaywallModalP
               )}
               
               <div className="flex items-start gap-4">
-                <div className="p-2 bg-brand-50 rounded-lg text-brand-600">
+                <div className="p-2 bg-brand-50 dark:bg-brand-900/30 rounded-lg text-brand-600">
                   {planIcons[plan.id as 'pro' | 'unlimited']}
                 </div>
                 
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-gray-900">{plan.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">{plan.name}</h3>
                     <div className="text-right">
-                      <span className="text-xl font-bold text-gray-900">
+                      <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
                         ${plan.price}
                       </span>
-                      <span className="text-sm text-gray-500">/month</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">/month</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mb-3">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                     {plan.generations ? `${plan.generations} generations/month` : 'Unlimited generations'}
                   </p>
                   <ul className="space-y-1 mb-4">
                     {plan.features.slice(0, 3).map((feature) => (
-                      <li key={feature} className="text-xs text-gray-600 flex items-center gap-2">
+                      <li key={feature} className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
                         <span className="text-green-500">✓</span>
                         {feature}
                       </li>

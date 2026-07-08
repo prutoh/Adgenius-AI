@@ -146,20 +146,20 @@ export function PropertyForm({ planId = 'free' }: { planId?: string }) {
       {/* Bedrooms, Bathrooms, Price Period - STRICT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-gray-700">Bedrooms</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bedrooms</label>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => updateField('bedrooms', Math.max(0, (formData.bedrooms || 0) - 1))} className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">-</button>
-            <span className="w-12 text-center font-medium">{formData.bedrooms || 0}</span>
-            <button type="button" onClick={() => updateField('bedrooms', (formData.bedrooms || 0) + 1)} className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">+</button>
+            <button type="button" onClick={() => updateField('bedrooms', Math.max(0, (formData.bedrooms || 0) - 1))} className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:text-gray-300">-</button>
+            <span className="w-12 text-center font-medium dark:text-gray-100">{formData.bedrooms || 0}</span>
+            <button type="button" onClick={() => updateField('bedrooms', (formData.bedrooms || 0) + 1)} className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:text-gray-300">+</button>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-gray-700">Bathrooms</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bathrooms</label>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => updateField('bathrooms', Math.max(0, (formData.bathrooms || 0) - 1))} className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">-</button>
-            <span className="w-12 text-center font-medium">{formData.bathrooms || 0}</span>
-            <button type="button" onClick={() => updateField('bathrooms', (formData.bathrooms || 0) + 1)} className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">+</button>
+            <button type="button" onClick={() => updateField('bathrooms', Math.max(0, (formData.bathrooms || 0) - 1))} className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:text-gray-300">-</button>
+            <span className="w-12 text-center font-medium dark:text-gray-100">{formData.bathrooms || 0}</span>
+            <button type="button" onClick={() => updateField('bathrooms', (formData.bathrooms || 0) + 1)} className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:text-gray-300">+</button>
           </div>
         </div>
 
@@ -170,10 +170,10 @@ export function PropertyForm({ planId = 'free' }: { planId?: string }) {
 
       {/* Key Features & Custom Features Staging Area */}
       <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700">Key Features <span className="text-gray-400">(select at least one)</span></label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Key Features <span className="text-gray-400 dark:text-gray-500">(select at least one)</span></label>
         <div className="flex flex-wrap gap-2">
           {COMMON_FEATURES.map((feature) => (
-            <button key={feature} type="button" onClick={() => toggleFeature(feature)} className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${(formData.key_features || []).includes(feature) ? 'bg-brand-100 text-brand-700 border border-brand-300' : 'bg-gray-100 text-gray-600 border border-transparent hover:bg-gray-200'}`}>
+            <button key={feature} type="button" onClick={() => toggleFeature(feature)} className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${(formData.key_features || []).includes(feature) ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 border border-brand-300 dark:border-brand-700' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
               {feature}
             </button>
           ))}
@@ -192,22 +192,22 @@ export function PropertyForm({ planId = 'free' }: { planId?: string }) {
                   handleSaveFeature() 
                 } 
               }}
-              className="flex-1 flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              className="flex-1 flex h-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
-            <button type="button" onClick={addCustomFeature} className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 text-gray-700 px-3 h-10 text-sm font-medium hover:bg-gray-50 transition-all">
+            <button type="button" onClick={addCustomFeature} className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 h-10 text-sm font-medium hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800 transition-all">
               Quick Add
             </button>
-            <button type="button" onClick={handleSaveFeature} className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-brand-600 text-brand-600 px-3 h-10 text-sm font-medium hover:bg-brand-50 transition-all">
+            <button type="button" onClick={handleSaveFeature} className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-brand-600 text-brand-600 dark:text-brand-400 px-3 h-10 text-sm font-medium hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all">
               Save to List
             </button>
           </div>
           {showFeatureSuccess && <p className="text-xs text-green-600 font-medium">✓ Feature saved to list!</p>}
           
           {draftFeatures.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-              <p className="text-xs font-semibold text-gray-500 uppercase">Saved Custom Features:</p>
+            <div className="bg-gray-50 dark:bg-gray-950 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Saved Custom Features:</p>
               {draftFeatures.map((feat) => (
-                <div key={feat} className="flex items-center justify-between bg-white px-3 py-1.5 rounded-md border border-gray-200 text-sm text-gray-700">
+                <div key={feat} className="flex items-center justify-between bg-white dark:bg-gray-900 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-800 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
                   <span>{feat}</span>
                   <button type="button" onClick={() => removeDraftFeature(feat)} className="text-gray-400 hover:text-red-500 text-xs">✕ Remove</button>
                 </div>
@@ -224,13 +224,13 @@ export function PropertyForm({ planId = 'free' }: { planId?: string }) {
 
       {/* Additional Notes with Save Button */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Additional Notes (Optional)</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Additional Notes (Optional)</label>
         <textarea
           placeholder="Write any special details here, then click 'Save Notes' below..."
           value={formData.additional_notes || ''}
           onChange={(e) => updateField('additional_notes', e.target.value)}
           rows={3}
-          className="flex min-h-[100px] w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 resize-y"
+          className="flex min-h-[100px] w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 resize-y"
         />
         <div className="flex items-center justify-between">
           <div>
@@ -246,9 +246,9 @@ export function PropertyForm({ planId = 'free' }: { planId?: string }) {
         </div>
         
         {savedNotes && (
-          <div className="bg-gray-50 rounded-lg p-3 border border-dashed border-gray-300">
-            <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Saved Notes Preview:</p>
-            <p className="text-sm text-gray-700 whitespace-pre-wrap">{savedNotes}</p>
+          <div className="bg-gray-50 dark:bg-gray-950 dark:bg-gray-800 rounded-lg p-3 border border-dashed border-gray-300 dark:border-gray-600">
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Saved Notes Preview:</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{savedNotes}</p>
           </div>
         )}
       </div>

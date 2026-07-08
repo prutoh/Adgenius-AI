@@ -34,9 +34,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             id={inputId}
             className={cn(
-              'flex h-10 w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 pr-10 text-sm dark:text-gray-100',
+              'flex h-10 w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-700 dark:border-gray-600 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-800 px-3 py-2 pr-10 text-sm dark:text-gray-100',
               'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500',
-              'disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-800',
+              'disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 dark:bg-gray-950 dark:disabled:bg-gray-800',
               error && 'border-red-500 focus:ring-red-500 focus:border-red-500',
               className
             )}

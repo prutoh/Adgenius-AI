@@ -16,7 +16,7 @@ export function Hero() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900/10 backdrop-blur-sm rounded-full border border-white/20 mb-8">
           <Sparkles className="h-4 w-4 text-brand-300" />
           <span className="text-sm text-brand-100">
             Powered by Google Gemini AI
@@ -46,7 +46,7 @@ export function Hero() {
             </Button>
           </Link>
           <Link href="/#how-it-works">
-            <Button variant="ghost" size="lg" className="text-brand-200 hover:text-white hover:bg-white/10">
+            <Button variant="ghost" size="lg" className="text-brand-200 hover:text-white hover:bg-white dark:bg-gray-900/10">
               <Play className="h-5 w-5" />
               See How It Works
             </Button>
@@ -75,7 +75,7 @@ export function Hero() {
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
         <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-1">
-          <div className="w-1.5 h-3 bg-white/50 rounded-full" />
+          <div className="w-1.5 h-3 bg-white dark:bg-gray-900/50 rounded-full" />
         </div>
       </div>
     </section>

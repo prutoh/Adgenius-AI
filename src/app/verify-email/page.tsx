@@ -85,14 +85,14 @@ function VerifyEmailContent() {
   // If there's an error or no token, don't show the form
   if (!token || error && !success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 pb-12 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-16 pb-12 px-4">
         <Card variant="bordered" padding="lg" className="max-w-md w-full">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Mail className="w-8 h-8 text-red-500" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Invalid Link</h1>
-            <p className="text-gray-600 text-sm">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Invalid Link</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               {error || 'The verification link is invalid or missing. Please check your email for the 6-digit code or request a new one from the login page.'}
             </p>
           </div>
@@ -109,7 +109,7 @@ function VerifyEmailContent() {
   // Loading State
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 pb-12 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-16 pb-12 px-4">
         <Loader size="lg" text="Verifying your email..." />
       </div>
     )
@@ -118,16 +118,21 @@ function VerifyEmailContent() {
   // Success State
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 pb-12 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-16 pb-12 px-4">
         <Card variant="bordered" padding="lg" className="max-w-md w-full text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Email Verified!</h1>
-          <p className="text-gray-600 text-sm mb-6">
-            Your email has been successfully verified. Redirecting you to the dashboard...
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Verification Complete!</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+            Your email has been successfully verified. You can now sign in to your account.
           </p>
-          <Loader size="sm" text="Redirecting you..." />
+          <p className="text-gray-500 text-xs mb-6">
+            Click the button below to continue to the sign-in page.
+          </p>
+          <Button onClick={() => router.push('/login')} icon={<ArrowRight className="h-4 w-4" />}>
+            Continue to Sign In
+          </Button>
         </Card>
       </div>
     )
@@ -135,14 +140,14 @@ function VerifyEmailContent() {
 
   // Default State (Ready to enter code)
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-24 pb-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-24 pb-12 px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Mail className="w-8 h-8 text-brand-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h1>
-          <p className="text-gray-600 text-sm mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Check Your Email</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-8">
             We just sent a 6-digit code to your email address. Enter it below to verify your account.
           </p>
         </div>
@@ -180,7 +185,7 @@ function VerifyEmailContent() {
                       return newOtp
                     })
                   }}
-                  className="w-12 h-14 text-center text-2xl font-bold text-gray-900 rounded-xl border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                  className="w-12 h-14 text-center text-2xl font-bold text-gray-900 dark:text-gray-100 rounded-xl border-2 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                 />
               ))}
             </div>

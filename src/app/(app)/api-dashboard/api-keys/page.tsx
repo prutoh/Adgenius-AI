@@ -174,14 +174,14 @@ export default function ApiKeysPage() {
         {/* Create Key Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Generate API Key</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Generate API Key</h2>
                 <button 
                   onClick={() => setShowCreateModal(false)} 
-                  className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  <span className="text-gray-500 text-xl">&times;</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-xl">&times;</span>
                 </button>
               </div>
 
@@ -206,8 +206,8 @@ export default function ApiKeysPage() {
                     required
                   />
                   
-                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">⚠️ SAVE THIS KEY! It will NOT be shown again after you leave this page.</p>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">⚠️ SAVE THIS KEY! It will NOT be shown again after you leave this page.</p>
                     <div className="bg-gray-900 text-green-400 p-3 rounded-md font-mono text-sm break-all whitespace-pre-wrap">{generatedKey}</div>
                   </div>
 
@@ -228,7 +228,7 @@ export default function ApiKeysPage() {
         {/* Keys List */}
         <Card variant="bordered" padding="md">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Your API Keys</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your API Keys</h2>
             <Badge variant="info">{apiKeys.length} Keys</Badge>
           </div>
 
@@ -244,9 +244,9 @@ export default function ApiKeysPage() {
           ) : (
             <div className="space-y-4">
               {apiKeys.map((key) => (
-                <div key={key.id} className="flex items-center justify-between gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+                <div key={key.id} className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-800 dark:border-gray-700 hover:shadow-sm transition-shadow">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 truncate">{key.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{key.name}</h3>
                     <div className="flex items-center gap-2 text-xs text-gray-400">
                       <span>Created: {new Date(key.created_at).toLocaleDateString()}</span>
                       {key.expires_at && <span className="text-yellow-500">• Expires: {new Date(key.expires_at).toLocaleDateString()}</span>}

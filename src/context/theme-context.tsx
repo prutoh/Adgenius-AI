@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 
 type Theme = 'light' | 'dark' | 'system'
 
@@ -14,64 +14,42 @@ const ThemeContext = createContext<ThemeContextType>({
   setTheme: () => {},
 })
 
-const STORAGE_KEY = 'adgenius-theme'
-
-function getSystemTheme(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system')
+  const [theme, setTheme] = useState<Theme>('system')
   const [mounted, setMounted] = useState(false)
 
-  // Read from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
-    if (stored && ['light', 'dark', 'system'].includes(stored)) {
-      setThemeState(stored)
-    }
     setMounted(true)
+    const stored = localStorage.getItem('theme') as Theme | null
+    if (stored) setTheme(stored)
   }, [])
 
-  // Apply theme to document
   useEffect(() => {
     if (!mounted) return
-
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
 
+    let effective: 'light' | 'dark'
     if (theme === 'system') {
-      const systemTheme = getSystemTheme()
-      root.classList.add(systemTheme)
+      effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     } else {
-      root.classList.add(theme)
+      effective = theme
     }
-
-    localStorage.setItem(STORAGE_KEY, theme)
+    root.classList.add(effective)
+    localStorage.setItem('theme', theme)
   }, [theme, mounted])
 
-  // Listen for system preference changes when theme is 'system'
   useEffect(() => {
-    if (!mounted) return
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-    function handleChange() {
-      if (theme === 'system') {
-        const root = window.document.documentElement
-        root.classList.remove('light', 'dark')
-        root.classList.add(getSystemTheme())
-      }
+    if (theme !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      const root = window.document.documentElement
+      root.classList.remove('light', 'dark')
+      root.classList.add(e.matches ? 'dark' : 'light')
     }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme, mounted])
-
-  const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme)
-  }, [])
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [theme])
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

@@ -159,7 +159,7 @@ export default function BrandingPage() {
               }`}
             >
               <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-sm ${
+                className={`inline-block h-5 w-5 transform rounded-full bg-white dark:bg-gray-900 transition-transform shadow-sm ${
                   branding.include_branding ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
@@ -204,7 +204,7 @@ export default function BrandingPage() {
                     placeholder="e.g., DM us for details or Visit our website"
                     value={branding.brand_cta}
                     onChange={(e) => updateField('brand_cta', e.target.value)}
-                    className="flex h-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                    className="flex h-10 w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   />
                   <p className="text-xs text-gray-400 dark:text-gray-500">This CTA replaces the default one in your generated ads.</p>
                 </div>
@@ -220,7 +220,7 @@ export default function BrandingPage() {
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${
                           branding.brand_voice === option.value
                             ? 'bg-brand-100 text-brand-700 border-brand-300 dark:bg-brand-900/30 dark:border-brand-700'
-                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                            : 'bg-gray-50 text-gray-600 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                         }`}
                       >
                         {option.label}
@@ -237,7 +237,7 @@ export default function BrandingPage() {
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
                   <Eye className="h-4 w-4 text-purple-600" /> Branding Preview
                 </h3>
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-100 dark:border-purple-900">
+                <div className="bg-white dark:bg-gray-900 dark:bg-gray-800 rounded-lg p-4 border border-purple-100 dark:border-purple-900">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Your ads will include: <strong>{branding.brand_name}</strong>
                     {branding.brand_tagline && <span> &mdash; <em>&quot;{branding.brand_tagline}&quot;</em></span>}

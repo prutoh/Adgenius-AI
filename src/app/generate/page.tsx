@@ -80,7 +80,7 @@ export default function GeneratePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 sticky top-24">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 dark:border-gray-700 p-6 sticky top-24">
               {/* Notice we removed the onSubmit prop completely */}
               <PropertyForm planId={planId} />
             </div>
