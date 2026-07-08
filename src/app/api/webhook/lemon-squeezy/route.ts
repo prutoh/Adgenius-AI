@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         await supabase
           .from('subscriptions')
           .update({ status: status, updated_at: new Date().toISOString() })
-          .eq('lemon-squeezy_subscription_id', data.id.toString())
+          .eq('lemon_squeezy_subscription_id', data.id.toString())
 
         if (status === 'expired' || status === 'cancelled') {
           await supabase
