@@ -114,8 +114,8 @@ export default function BrandingPage() {
       <div className="min-h-screen flex items-center justify-center pt-16 px-4">
         <Card variant="bordered" padding="lg" className="max-w-md w-full text-center">
           <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-          <h1 className="text-xl font-bold text-gray-900 mb-2">Unlimited Feature</h1>
-          <p className="text-gray-600 text-sm mb-6">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Unlimited Feature</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
             Custom branding is exclusively available on the Unlimited plan. Personalize your ad copies with your brand identity.
           </p>
           <Button onClick={() => router.push('/pricing')}>View Pricing</Button>
@@ -125,10 +125,10 @@ export default function BrandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-brand-600 flex items-center gap-1 mb-2">
+          <Link href="/dashboard" className="text-sm text-gray-500 dark:text-gray-400 hover:text-brand-600 flex items-center gap-1 mb-2">
             <ArrowLeft className="h-4 w-4" /> Back to Dashboard
           </Link>
           <div className="flex items-center gap-3">
@@ -136,8 +136,8 @@ export default function BrandingPage() {
               <Palette className="h-6 w-6 text-purple-600" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Custom Branding</h1>
-              <p className="text-gray-600 mt-0.5">Personalize your generated ad copies with your brand identity.</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Custom Branding</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-0.5">Personalize your generated ad copies with your brand identity.</p>
             </div>
           </div>
         </div>
@@ -146,8 +146,8 @@ export default function BrandingPage() {
         <Card variant="bordered" padding="md" className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-semibold text-gray-900">Include Branding in Ads</h2>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100">Include Branding in Ads</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 When enabled, your brand info will be woven into generated ad copy automatically.
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function BrandingPage() {
               type="button"
               onClick={() => updateField('include_branding', !branding.include_branding)}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                branding.include_branding ? 'bg-brand-600' : 'bg-gray-300'
+                branding.include_branding ? 'bg-brand-600' : 'bg-gray-300 dark:bg-gray-600'
               }`}
             >
               <span
@@ -170,7 +170,7 @@ export default function BrandingPage() {
         {branding.include_branding && (
           <div className="space-y-6">
             <Card variant="bordered" padding="md">
-              <h2 className="font-semibold text-gray-900 mb-4">Brand Identity</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Brand Identity</h2>
               <div className="space-y-4">
                 <Input
                   label="Brand / Company Name"
@@ -195,22 +195,22 @@ export default function BrandingPage() {
             </Card>
 
             <Card variant="bordered" padding="md">
-              <h2 className="font-semibold text-gray-900 mb-4">Ad Preferences</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Ad Preferences</h2>
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-700">Default Call-to-Action</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Default Call-to-Action</label>
                   <input
                     type="text"
                     placeholder="e.g., DM us for details or Visit our website"
                     value={branding.brand_cta}
                     onChange={(e) => updateField('brand_cta', e.target.value)}
-                    className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                    className="flex h-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   />
-                  <p className="text-xs text-gray-400">This CTA replaces the default one in your generated ads.</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">This CTA replaces the default one in your generated ads.</p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-700">Brand Voice</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Brand Voice</label>
                   <div className="flex flex-wrap gap-2">
                     {VOICE_OPTIONS.map((option) => (
                       <button
@@ -219,8 +219,8 @@ export default function BrandingPage() {
                         onClick={() => updateField('brand_voice', option.value)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${
                           branding.brand_voice === option.value
-                            ? 'bg-brand-100 text-brand-700 border-brand-300'
-                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                            ? 'bg-brand-100 text-brand-700 border-brand-300 dark:bg-brand-900/30 dark:border-brand-700'
+                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                         }`}
                       >
                         {option.label}
@@ -234,15 +234,15 @@ export default function BrandingPage() {
             {/* Preview */}
             {branding.brand_name && (
               <Card variant="bordered" padding="md" className="bg-purple-50/50 border-purple-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
                   <Eye className="h-4 w-4 text-purple-600" /> Branding Preview
                 </h3>
-                <div className="bg-white rounded-lg p-4 border border-purple-100">
-                  <p className="text-sm text-gray-600">
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-100 dark:border-purple-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Your ads will include: <strong>{branding.brand_name}</strong>
                     {branding.brand_tagline && <span> &mdash; <em>&quot;{branding.brand_tagline}&quot;</em></span>}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Voice: <span className="font-medium capitalize">{branding.brand_voice}</span>
                     {branding.brand_cta && <span> &bull; CTA: &quot;{branding.brand_cta}&quot;</span>}
                   </p>

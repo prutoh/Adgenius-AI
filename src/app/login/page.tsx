@@ -54,11 +54,11 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 pb-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-16 pb-12 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="text-gray-600 mt-2">Sign in to your {APP_NAME} account</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Welcome back</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your {APP_NAME} account</p>
         </div>
 
         <Card variant="bordered" padding="lg">
@@ -96,10 +96,10 @@ function LoginForm() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-gray-200 dark:border-gray-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">Or continue with</span>
             </div>
           </div>
 
@@ -120,7 +120,7 @@ function LoginForm() {
           </Button>
         </Card>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Don&apos;t have an account?{' '}
           <Link href="/signup" className="font-medium text-brand-600 hover:text-brand-700">
             Sign up for free

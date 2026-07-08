@@ -138,8 +138,8 @@ export default function ApiKeysPage() {
       <div className="min-h-screen flex items-center justify-center pt-16 px-4">
         <Card variant="bordered" padding="lg" className="max-w-md w-full text-center">
           <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-          <h1 className="text-xl font-bold text-gray-900 mb-2">API Access Required</h1>
-          <p className="text-gray-600 text-sm mb-6">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">API Access Required</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
             The API Access feature is exclusively available on the Unlimited plan.
           </p>
           <div className="mt-6 flex justify-center gap-3">
@@ -154,12 +154,12 @@ export default function ApiKeysPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">API Access</h1>
-            <p className="text-gray-600 mt-1">Manage your programmatic API keys.</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">API Access</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your programmatic API keys.</p>
           </div>
           
           <Button 

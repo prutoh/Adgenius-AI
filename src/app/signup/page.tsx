@@ -78,11 +78,11 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 pb-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 pt-16 pb-12 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="text-gray-600 mt-2">Start generating ads with {APP_NAME}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create your account</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Start generating ads with {APP_NAME}</p>
         </div>
 
         <Card variant="bordered" padding="lg">
@@ -128,9 +128,9 @@ export default function SignupPage() {
                 id="terms"
                 checked={agreeToTerms}
                 onChange={(e) => setAgreeToTerms(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 cursor-pointer"
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500 cursor-pointer"
               />
-              <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
+              <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
                 I am at least 18 years old and I agree to the{' '}
                 <Link href="/terms" target="_blank" className="font-medium text-brand-600 hover:text-brand-700 underline">
                   Terms of Service
@@ -156,10 +156,10 @@ export default function SignupPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-gray-200 dark:border-gray-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">Or continue with</span>
             </div>
           </div>
 
@@ -179,12 +179,12 @@ export default function SignupPage() {
             Google
           </Button>
           
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
             By creating an account, you confirm that you are at least 18 years old and agree to comply with these Terms.
           </p>
         </Card>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Already have an account?{' '}
           <Link href="/login" className="font-medium text-brand-600 hover:text-brand-700">
             Sign in

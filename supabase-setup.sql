@@ -47,3 +47,27 @@ CREATE POLICY "Users can view own tickets" ON public.support_tickets
 
 CREATE POLICY "Users can insert own tickets" ON public.support_tickets
   FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 3. INVOICES TABLE (for PayPal & Lemon Squeezy billing)
+CREATE TABLE IF NOT EXISTS public.invoices (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  invoice_number TEXT UNIQUE NOT NULL,
+  plan_id TEXT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  currency TEXT DEFAULT 'USD',
+  interval TEXT DEFAULT 'monthly',
+  status TEXT DEFAULT 'paid' CHECK (status IN ('paid', 'pending', 'failed', 'refunded')),
+  pdf_url TEXT,
+  paypal_order_id TEXT,
+  lemon_squeezy_order_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own invoices" ON public.invoices
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own invoices" ON public.invoices
+  FOR INSERT WITH CHECK (auth.uid() = user_id);

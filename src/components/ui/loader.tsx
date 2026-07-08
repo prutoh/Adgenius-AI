@@ -18,7 +18,7 @@ export function Loader({ size = 'md', text, className }: LoaderProps) {
     <div className={cn('flex flex-col items-center justify-center gap-3', className)}>
       <Loader2 className={cn('animate-spin text-brand-600', sizes[size])} />
       {text && (
-        <p className="text-sm text-gray-500">{text}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{text}</p>
       )}
     </div>
   )

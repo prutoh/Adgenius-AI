@@ -1,20 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils/helpers'
 import { APP_NAME } from '@/lib/utils/constants'
-import { Button } from '@/components/ui/button'
 import { UserMenu } from './user-menu'
-import { Menu, X, Sparkles } from 'lucide-react'
+import { Menu, X, Sparkles, Sun, Moon, Monitor, Check } from 'lucide-react'
 import { useTheme } from '@/context/theme-context'
-import { Sun, Moon, Monitor } from 'lucide-react'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false)
   const pathname = usePathname()
+  const themeDropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +28,17 @@ export function Navbar() {
     setIsMobileMenuOpen(false)
   }, [pathname])
 
+  // Close theme dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (themeDropdownRef.current && !themeDropdownRef.current.contains(event.target as Node)) {
+        setIsThemeDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   const isHomePage = pathname === '/'
 
   const navLinks = [
@@ -38,12 +49,18 @@ export function Navbar() {
 
   const { theme, setTheme } = useTheme()
 
+  const themeOptions = [
+    { value: 'light' as const, label: 'Light', icon: Sun },
+    { value: 'dark' as const, label: 'Dark', icon: Moon },
+    { value: 'system' as const, label: 'System', icon: Monitor },
+  ]
+
   return (
     <nav
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled || !isHomePage
-          ? 'bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-sm'
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 shadow-sm'
           : 'bg-transparent'
       )}
     >
@@ -56,7 +73,7 @@ export function Navbar() {
             </div>
             <span className={cn(
               'font-bold text-lg transition-colors',
-              isScrolled || !isHomePage ? 'text-gray-900' : 'text-white'
+              isScrolled || !isHomePage ? 'text-gray-900 dark:text-gray-100' : 'text-white'
             )}>
               {APP_NAME}
             </span>
@@ -69,8 +86,8 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'text-sm font-medium transition-colors hover:text-brand-600',
-                  isScrolled ? 'text-gray-600' : 'text-white/80 hover:text-white'
+                  'text-sm font-medium transition-colors hover:text-brand-600 dark:hover:text-brand-400',
+                  isScrolled ? 'text-gray-600 dark:text-gray-300' : 'text-white/80 hover:text-white'
                 )}
               >
                 {link.label}
@@ -81,16 +98,45 @@ export function Navbar() {
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
             {isHomePage && (
-              <button
-                onClick={() => {
-                  if (theme === 'light') setTheme('dark')
-                  else if (theme === 'dark') setTheme('light')
-                  else setTheme('system')
-                }}
-                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-              >
-                {theme === 'dark' ? <Sun className="h-5 w-5" /> : theme === 'light' ? <Moon className="h-5 w-5" /> : <Monitor className="h-5 w-5" />}
-              </button>
+              <div className="relative" ref={themeDropdownRef}>
+                <button
+                  onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+                  className={cn(
+                    'p-2 rounded-lg transition-colors',
+                    isScrolled || !isHomePage
+                      ? 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      : 'text-white/80 hover:bg-white/10'
+                  )}
+                >
+                  {theme === 'dark' ? <Moon className="h-5 w-5" /> : theme === 'light' ? <Sun className="h-5 w-5" /> : <Monitor className="h-5 w-5" />}
+                </button>
+
+                {isThemeDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 animate-fade-in z-50">
+                    {themeOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setTheme(option.value)
+                          setIsThemeDropdownOpen(false)
+                        }}
+                        className={cn(
+                          'flex items-center gap-3 w-full px-3 py-2 text-sm transition-colors',
+                          theme === option.value
+                            ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        )}
+                      >
+                        <option.icon className="h-4 w-4" />
+                        <span>{option.label}</span>
+                        {theme === option.value && (
+                          <Check className="h-4 w-4 ml-auto" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
             <UserMenu />
           </div>
@@ -101,7 +147,7 @@ export function Navbar() {
             className={cn(
               'md:hidden p-2 rounded-lg transition-colors',
               isScrolled || !isHomePage
-                ? 'text-gray-600 hover:bg-gray-100'
+                ? 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-white hover:bg-white/10'
             )}
           >
@@ -115,18 +161,38 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 animate-fade-in">
+          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700 animate-fade-in">
             <div className="flex flex-col gap-3">
               {isHomePage && navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="pt-3 border-t border-gray-200 mt-3">
+              {/* Mobile Theme Toggle */}
+              <div className="px-3 py-2">
+                <div className="flex items-center gap-2">
+                  {themeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setTheme(option.value)}
+                      className={cn(
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                        theme === option.value
+                          ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
+                          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      )}
+                    >
+                      <option.icon className="h-3.5 w-3.5" />
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="pt-3 border-t border-gray-200 dark:border-gray-700 mt-3">
                 <UserMenu />
               </div>
             </div>

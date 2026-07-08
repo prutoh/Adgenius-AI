@@ -29,17 +29,17 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-white">
+    <section id="how-it-works" className="py-24 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-brand-600 font-semibold text-sm uppercase tracking-wider">
             How It Works
           </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900">
+          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
             From Listing to Ad in 4 Simple Steps
           </h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             No learning curve. No prompt engineering. Just fill in the details and get your ad.
           </p>
         </div>
@@ -50,22 +50,22 @@ export function HowItWorks() {
             <div key={step.step} className="relative">
               {/* Connector Line */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-brand-200" />
+                <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-brand-200 dark:bg-brand-800" />
               )}
               
               <div className="text-center">
                 <div className="relative inline-flex">
-                  <div className="w-24 h-24 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                  <div className="w-24 h-24 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center mb-6 mx-auto">
                     <step.icon className="h-10 w-10 text-brand-600" />
                   </div>
                   <span className="absolute -top-2 -right-2 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                     {step.step}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {step.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   {step.description}
                 </p>
               </div>

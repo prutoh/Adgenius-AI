@@ -111,6 +111,42 @@ export interface Database {
           updated_at?: string
         }
       }
+      invoices: {
+        Row: {
+          id: string
+          user_id: string
+          invoice_number: string
+          plan_id: string
+          amount: number
+          currency: string
+          interval: string
+          status: string
+          pdf_url: string | null
+          paypal_order_id: string | null
+          lemon_squeezy_order_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          invoice_number: string
+          plan_id: string
+          amount: number
+          currency?: string
+          interval?: string
+          status?: string
+          pdf_url?: string | null
+          paypal_order_id?: string | null
+          lemon_squeezy_order_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          status?: string
+          pdf_url?: string | null
+          paypal_order_id?: string | null
+          lemon_squeezy_order_id?: string | null
+        }
+      }
     }
     Functions: {
       get_monthly_usage: {

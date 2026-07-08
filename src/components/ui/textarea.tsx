@@ -16,7 +16,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             {label}
           </label>
@@ -24,10 +24,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           id={inputId}
           className={cn(
-            'flex min-h-[100px] w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm',
-            'placeholder:text-gray-400',
+            'flex min-h-[100px] w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-100',
+            'placeholder:text-gray-400 dark:placeholder:text-gray-500',
             'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500',
-            'disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50',
+            'disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-800',
             'resize-y',
             error && 'border-red-500 focus:ring-red-500 focus:border-red-500',
             className

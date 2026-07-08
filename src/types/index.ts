@@ -128,6 +128,24 @@ export interface Plan {
 }
 
 // ============================================
+// INVOICE TYPES
+// ============================================
+export interface Invoice {
+  id: string
+  user_id: string
+  invoice_number: string
+  plan_id: PlanId
+  amount: number
+  currency: string
+  interval: 'monthly' | 'yearly'
+  status: 'paid' | 'pending' | 'failed' | 'refunded'
+  pdf_url: string | null
+  paypal_order_id: string | null
+  lemon_squeezy_order_id: string | null
+  created_at: string
+}
+
+// ============================================
 // API TYPES
 // ============================================
 export interface ApiResponse<T> {

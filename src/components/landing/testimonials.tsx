@@ -24,14 +24,14 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-brand-600 font-semibold text-sm uppercase tracking-wider">
             Testimonials
           </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900">
+          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
             Loved by Real Estate Professionals
           </h2>
         </div>
@@ -48,20 +48,20 @@ export function Testimonials() {
               </div>
               
               {/* Content */}
-              <p className="text-gray-700 leading-relaxed mb-6">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                 &ldquo;{testimonial.content}&rdquo;
               </p>
               
               {/* Author */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
                   <span className="text-brand-600 font-semibold">
                     {testimonial.name.charAt(0)}
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">{testimonial.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
                 </div>
               </div>
             </Card>

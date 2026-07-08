@@ -12,7 +12,7 @@ import { Loader } from '@/components/ui/loader'
 import { Input } from '@/components/ui/input'
 import { CopyButton } from '@/components/generate/copy-button'
 import { getRelativeTime } from '@/lib/utils/helpers'
-import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key, Clock, Headphones, Palette } from 'lucide-react'
+import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key, Clock, Headphones, Palette, Receipt } from 'lucide-react'
 import Link from 'next/link'
 
 interface Generation {
@@ -115,11 +115,11 @@ export default function DashboardPage() {
   if (!isAuthenticated) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Welcome back, {profile?.full_name || profile?.email?.split('@')[0]}!</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Welcome back, {profile?.full_name || profile?.email?.split('@')[0]}!</p>
         </div>
 
         {/* Stats Grid */}
@@ -128,8 +128,8 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="p-3 bg-brand-100 rounded-xl"><Sparkles className="h-6 w-6 text-brand-600" /></div>
               <div>
-                <p className="text-sm text-gray-500">Generations Used</p>
-                <p className="text-2xl font-bold text-gray-900">{usage.used} / {usage.limit === null ? '∞' : usage.limit}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Generations Used</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{usage.used} / {usage.limit === null ? '∞' : usage.limit}</p>
               </div>
             </div>
           </Card>
@@ -137,9 +137,9 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="p-3 bg-green-100 rounded-xl"><CreditCard className="h-6 w-6 text-green-600" /></div>
               <div>
-                <p className="text-sm text-gray-500">Current Plan</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Current Plan</p>
                 <div className="flex items-center gap-2">
-                  <p className="text-2xl font-bold text-gray-900 capitalize">{profile?.plan_id || usage.plan}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 capitalize">{profile?.plan_id || usage.plan}</p>
                   {(profile?.plan_id || usage.plan) === 'free' && <Link href="/pricing"><Badge variant="info" className="cursor-pointer">Upgrade</Badge></Link>}
                 </div>
               </div>
@@ -149,8 +149,8 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="p-3 bg-purple-100 rounded-xl"><FileText className="h-6 w-6 text-purple-600" /></div>
               <div>
-                <p className="text-sm text-gray-500">Total Generated</p>
-                <p className="text-2xl font-bold text-gray-900">{generations.length}+</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Generated</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{generations.length}+</p>
               </div>
             </div>
           </Card>
@@ -160,7 +160,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
             <Card variant="bordered" padding="md">
-                            <h2 className="font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                            <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h2>
               <div className="space-y-3">
                 <Link href="/generate">
                   <Button className="w-full justify-start" variant="outline"><Sparkles className="h-4 w-4" />New Generation</Button>
@@ -172,6 +172,9 @@ export default function DashboardPage() {
                   <>
                     <Link href="/history">
                       <Button className="w-full justify-start" variant="outline"><Clock className="h-4 w-4" />Generation History</Button>
+                    </Link>
+                    <Link href="/billing">
+                      <Button className="w-full justify-start" variant="outline"><Receipt className="h-4 w-4" />Billing & Invoices</Button>
                     </Link>
                     <Link href="/support">
                       <Button className="w-full justify-start" variant="outline"><Headphones className="h-4 w-4" />Priority Support</Button>
@@ -192,19 +195,19 @@ export default function DashboardPage() {
           <div className="lg:col-span-2">
             <Card variant="bordered" padding="md">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Recent Generations</h2>
+                <h2 className="font-semibold text-gray-900 dark:text-gray-100">Recent Generations</h2>
               </div>
               {isLoadingHistory ? (
                 <div className="py-8"><Loader size="sm" text="Loading history..." /></div>
               ) : generations.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <FileText className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <FileText className="h-8 w-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
                   <p className="text-sm">No generations yet</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {generations.map((gen) => (
-                    <div key={gen.id} className="p-4 bg-gray-50 rounded-lg">
+                    <div key={gen.id} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <div className="flex items-start justify-between gap-4 mb-2">
                         <div className="flex items-center gap-2">
                           <Badge variant="default">{gen.platform}</Badge>
@@ -212,7 +215,7 @@ export default function DashboardPage() {
                         </div>
                         <CopyButton text={gen.output_text} className="flex-shrink-0" />
                       </div>
-                      <p className="text-sm text-gray-700 line-clamp-3 whitespace-pre-wrap">{gen.output_text}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 whitespace-pre-wrap">{gen.output_text}</p>
                     </div>
                   ))}
                 </div>
@@ -223,11 +226,11 @@ export default function DashboardPage() {
 
         {/* --- ACCOUNT SETTINGS & PRIVACY SECTION --- */}
         <div className="mt-8 border-t pt-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Account Settings & Privacy</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Account Settings & Privacy</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card variant="bordered" padding="md">
-              <h3 className="font-semibold text-gray-900 mb-4">Update Profile Name</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Update Profile Name</h3>
               <div className="flex gap-2">
                 <Input 
                   placeholder="Your full name" 
@@ -250,7 +253,7 @@ export default function DashboardPage() {
 
             <Card variant="bordered" padding="md" className="border-red-200">
               <h3 className="font-semibold text-red-600 mb-2">Danger Zone</h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 Permanently delete your account and all associated data (generated ads, usage history, subscriptions). This action cannot be undone.
               </p>
               <Button 
@@ -268,9 +271,9 @@ export default function DashboardPage() {
       {/* --- DELETE ACCOUNT MODAL --- */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up">
             <h3 className="text-lg font-bold text-red-600 mb-2">Confirm Account Deletion</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               This will permanently erase your account, all your generated ads, and your subscription. Type <strong>DELETE</strong> below to confirm.
             </p>
             <Input 

@@ -68,19 +68,19 @@ export default function GeneratePage() {
   if (!isAuthenticated) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Generate Ad Copy</h1>
-            <p className="text-gray-600 mt-1">Fill in your property details and let AI do the magic.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Generate Ad Copy</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Fill in your property details and let AI do the magic.</p>
           </div>
           <UsageCounter />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 sticky top-24">
               {/* Notice we removed the onSubmit prop completely */}
               <PropertyForm planId={planId} />
             </div>
@@ -96,14 +96,14 @@ export default function GeneratePage() {
             />
 
             {!output && !isGenerating && !error && (
-              <div className="bg-white rounded-xl border border-dashed border-gray-300 p-12 text-center">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-1">Your ad copy will appear here</h3>
-                <p className="text-sm text-gray-500">Fill in the form and click generate to get started.</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">Your ad copy will appear here</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Fill in the form and click generate to get started.</p>
               </div>
             )}
           </div>

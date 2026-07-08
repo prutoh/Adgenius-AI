@@ -31,12 +31,12 @@ export function PricingPreview() {
   }
 
   return (
-    <section id="pricing" className="py-24 bg-white">
+    <section id="pricing" className="py-24 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-brand-600 font-semibold text-sm uppercase tracking-wider">Pricing</span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900">Simple, Transparent Pricing</h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">Simple, Transparent Pricing</h2>
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Start free. Upgrade when you need more. No hidden fees.
           </p>
         </div>
@@ -58,9 +58,9 @@ export function PricingPreview() {
               )}
 
               <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{plan.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{plan.name}</h3>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
+                  <span className="text-4xl font-bold text-gray-900 dark:text-gray-100">${plan.price}</span>
                   {plan.price > 0 && (
                     <span className="text-gray-500">/month</span>
                   )}
@@ -76,7 +76,7 @@ export function PricingPreview() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
                     <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -104,9 +104,9 @@ export function PricingPreview() {
                 )}
 
                 {setupMessage && plan.price > 0 && (
-                  <div className="mt-3 p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2 animate-fade-in">
+                  <div className="mt-3 p-2.5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg flex items-start gap-2 animate-fade-in">
                     <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-yellow-700">{setupMessage}</p>
+                    <p className="text-xs text-yellow-700 dark:text-yellow-400">{setupMessage}</p>
                   </div>
                 )}
               </div>
