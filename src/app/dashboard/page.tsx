@@ -187,9 +187,12 @@ export default function DashboardPage() {
                       </Link>
                     )}
                     {(profile?.plan_id || 'free') === 'unlimited' && (
-                      <Link href="/social-accounts">
-                        <Button className="w-full justify-start" variant="outline"><Send className="h-4 w-4" />Direct Posting</Button>
-                      </Link>
+                      <div className="relative">
+                        <button disabled className="w-full flex items-center justify-start gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800/30 cursor-not-allowed">
+                          <Send className="h-4 w-4" />Direct Posting
+                          <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">Soon</span>
+                        </button>
+                      </div>
                     )}
                   </>
                 ) : (

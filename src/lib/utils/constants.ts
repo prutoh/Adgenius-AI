@@ -69,7 +69,7 @@ export const PLANS: Plan[] = [
       'Priority support',
       'API access',
       'Custom branding',
-      'Direct posting to social media',
+      'Direct posting to social media (coming soon)',
     ],
   },
 ]

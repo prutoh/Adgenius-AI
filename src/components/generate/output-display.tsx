@@ -60,7 +60,7 @@ export function OutputDisplay({ output, isGenerating, error, platform, onReset, 
         </div>
         <div className="flex items-center gap-2">
           {planId === 'unlimited' && output && !isGenerating && (
-            <Button variant="primary" size="sm" onClick={() => setShowPostModal(true)} icon={<Send className="h-4 w-4" />}>
+            <Button variant="primary" size="sm" disabled title="Coming soon">
               Post Directly
             </Button>
           )}
