@@ -30,18 +30,23 @@ export function createCheckoutUrl(
   userId: string,
   userEmail: string
 ): string {
-  const storeId = process.env.LEMON_SQUEEZY_STORE_ID
+  // Store SLUG is used in the checkout URL (the subdomain), NOT the numeric store ID
+  // e.g. if store URL is https://my-store.lemonsqueezy.com, slug = "my-store"
+  const storeSlug = process.env.LEMON_SQUEEZY_STORE_SLUG
   const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
-  return `https://${storeId}.lemonsqueezy.com/checkout/buy/${variantId}?checkout[custom][user_id]=${userId}&checkout[email]=${userEmail}&checkout[redirect_url]=${encodeURIComponent(`${appUrl}/dashboard?upgraded=true`)}`
+  const url = `https://${storeSlug}.lemonsqueezy.com/checkout/buy/${variantId}?checkout[custom][user_id]=${userId}&checkout[email]=${userEmail}&checkout[redirect_url]=${encodeURIComponent(`${appUrl}/dashboard?upgraded=true`)}`
+
+  console.log('[LemonSqueezy] Checkout URL:', url)
+  return url
 }
 
 /**
  * Get Lemon Squeezy management portal URL
  */
 export function getManagementUrl(): string {
-  const storeId = process.env.LEMON_SQUEEZY_STORE_ID
-  return `https://${storeId}.lemonsqueezy.com/billing`
+  const storeSlug = process.env.LEMON_SQUEEZY_STORE_SLUG
+  return `https://${storeSlug}.lemonsqueezy.com/billing`
 }
 
 // Re-export plans from constants

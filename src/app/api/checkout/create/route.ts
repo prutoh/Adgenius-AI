@@ -25,9 +25,19 @@ export async function POST(request: NextRequest) {
     }
 
     const variantId = getVariantId(planId, interval)
+    console.log('[Checkout] planId:', planId, 'interval:', interval, 'variantId:', variantId)
     if (!variantId) {
+      console.error('[Checkout] Missing variant ID. Check env vars for plan:', planId, 'interval:', interval)
       return NextResponse.json(
         { error: 'Payment is being configured. Please try again later.' },
+        { status: 503 }
+      )
+    }
+
+    if (!process.env.LEMON_SQUEEZY_STORE_SLUG) {
+      console.error('[Checkout] LEMON_SQUEEZY_STORE_SLUG is not set in environment')
+      return NextResponse.json(
+        { error: 'Payment configuration is incomplete (missing store slug). Please contact support.' },
         { status: 503 }
       )
     }
@@ -38,6 +48,7 @@ export async function POST(request: NextRequest) {
       user.email || ''
     )
 
+    console.log('[Checkout] Generated URL:', checkoutUrl)
     return NextResponse.json({ checkoutUrl })
   } catch (error) {
     console.error('Checkout creation error:', error)
