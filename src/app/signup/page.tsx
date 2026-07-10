@@ -45,6 +45,7 @@ export default function SignupPage() {
         data: {
           full_name: fullName,
         },
+        emailRedirectTo: `${window.location.origin}/verify-email`,
       },
     })
 
@@ -54,7 +55,8 @@ export default function SignupPage() {
       return
     }
 
-    router.push('/generate')
+    // Redirect to verify-email page with the email so we can show it + resend
+    router.push(`/verify-email?email=${encodeURIComponent(email)}`)
     router.refresh()
   }
 
@@ -69,7 +71,7 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/dashboard`,
       },
     })
 
