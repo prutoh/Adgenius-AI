@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
-import { createClient } from '@/lib/supabase/client'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Loader } from '@/components/ui/loader'
-import { ArrowLeft, FileText, Download, Receipt, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, FileText, Download, Receipt, RefreshCw, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 
 interface Invoice {
@@ -31,12 +30,12 @@ const statusConfig: Record<string, { label: string; variant: 'success' | 'warnin
 }
 
 export default function BillingPage() {
-  const { isAuthenticated, isLoading: authLoading, planId } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, planId, refreshProfile } = useAuth()
   const router = useRouter()
-  const supabase = createClient()
 
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [isLoadingInvoices, setIsLoadingInvoices] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -44,19 +43,24 @@ export default function BillingPage() {
     }
   }, [isAuthenticated, authLoading, router])
 
-  useEffect(() => {
-    async function fetchInvoices() {
-      const { data } = await supabase
-        .from('invoices')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (data) setInvoices(data as Invoice[])
+  const fetchInvoices = useCallback(async () => {
+    setIsLoadingInvoices(true)
+    setFetchError(null)
+    try {
+      const response = await fetch('/api/invoices')
+      if (!response.ok) throw new Error('Failed to fetch invoices')
+      const { data } = await response.json()
+      setInvoices((data || []) as Invoice[])
+    } catch {
+      setFetchError('Could not load invoices. Please try again.')
+    } finally {
       setIsLoadingInvoices(false)
     }
+  }, [])
 
+  useEffect(() => {
     if (isAuthenticated) fetchInvoices()
-  }, [isAuthenticated, supabase])
+  }, [isAuthenticated, fetchInvoices])
 
   if (authLoading) {
     return (
@@ -113,7 +117,19 @@ export default function BillingPage() {
 
         {/* Invoices List */}
         <Card variant="bordered" padding="md">
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice History</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Invoice History</h2>
+            <Button variant="ghost" size="sm" onClick={fetchInvoices} icon={<RefreshCw className="h-3.5 w-3.5" />}>
+              Refresh
+            </Button>
+          </div>
+
+          {fetchError && (
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-4">
+              <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+              {fetchError}
+            </div>
+          )}
 
           {isLoadingInvoices ? (
             <div className="py-8">
