@@ -7,10 +7,9 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Check, Sparkles, CreditCard, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-import { getVariantId, createCheckoutUrl } from '@/lib/payments/plans'
 
 export function PricingPreview() {
-  const { isAuthenticated, profile, session } = useAuth()
+  const { isAuthenticated, profile } = useAuth()
   const [paypalLoading, setPaypalLoading] = useState<string | null>(null)
   const [paypalError, setPaypalError] = useState<string | null>(null)
 
@@ -22,21 +21,41 @@ export function PricingPreview() {
     }
   }
 
+  const [cardError, setCardError] = useState<string | null>(null)
+  const [cardLoading, setCardLoading] = useState<string | null>(null)
+
   const handleLemonSqueezyCheckout = useCallback(
     async (planId: string) => {
-      if (!isAuthenticated || !session) {
+      if (!isAuthenticated) {
         window.location.href = `/signup?redirect=/pricing?plan=${planId}`
         return
       }
-      const variantId = getVariantId(planId as 'pro' | 'unlimited', 'monthly')
-      if (!variantId) {
-        window.location.href = `/pricing?plan=${planId}`
-        return
+
+      setCardError(null)
+      setCardLoading(planId)
+
+      try {
+        const response = await fetch('/api/checkout/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planId, interval: 'monthly' }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          setCardError(data.error || 'Failed to create checkout. Please try again.')
+          return
+        }
+
+        window.location.href = data.checkoutUrl
+      } catch {
+        setCardError('Something went wrong. Please try again.')
+      } finally {
+        setCardLoading(null)
       }
-      const checkoutUrl = createCheckoutUrl(variantId, session.user.id, session.user.email || '')
-      window.location.href = checkoutUrl
     },
-    [isAuthenticated, session]
+    [isAuthenticated]
   )
 
   const handlePayPalCheckout = useCallback(
@@ -89,6 +108,13 @@ export function PricingPreview() {
             Start free. Upgrade when you need more. No hidden fees.
           </p>
         </div>
+
+        {cardError && (
+          <div className="mb-6 max-w-lg mx-auto p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{cardError}</p>
+          </div>
+        )}
 
         {paypalError && (
           <div className="mb-6 max-w-lg mx-auto p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
@@ -169,6 +195,7 @@ export function PricingPreview() {
                         className="w-full"
                         size="lg"
                         onClick={() => handleLemonSqueezyCheckout(plan.id)}
+                        loading={cardLoading === plan.id}
                         icon={<CreditCard className="h-4 w-4" />}
                       >
                         Pay with Card

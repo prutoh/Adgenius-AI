@@ -7,17 +7,20 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Check, Sparkles, CreditCard, Loader2, AlertTriangle } from 'lucide-react'
 import { useState, useEffect, Suspense, useCallback } from 'react'
-import { getVariantId, createCheckoutUrl } from '@/lib/payments/plans'
 
 function PricingContent() {
-  const { isAuthenticated, profile, session, refreshProfile } = useAuth()
+  const { isAuthenticated, profile, refreshProfile } = useAuth()
   const searchParams = useSearchParams()
   const router = useRouter()
   const highlightedPlan = searchParams.get('plan')
   const currentPlanId = profile?.plan_id || 'free'
 
+  // Card (Lemon Squeezy) state
+  const [cardLoading, setCardLoading] = useState<string | null>(null)
+  const [cardError, setCardError] = useState<string | null>(null)
+
   // PayPal state
-  const [paypalLoading, setPaypalLoading] = useState<string | null>(null) // tracks which plan is loading
+  const [paypalLoading, setPaypalLoading] = useState<string | null>(null)
   const [paypalError, setPaypalError] = useState<string | null>(null)
   const [captureLoading, setCaptureLoading] = useState(false)
 
@@ -26,7 +29,6 @@ function PricingContent() {
 
   useEffect(() => {
     if (paypalStatus === 'success' || paypalStatus === 'cancelled') {
-      // Clean URL without refreshing the page
       const url = new URL(window.location.href)
       url.searchParams.delete('paypal')
       window.history.replaceState({}, '', url.toString())
@@ -43,25 +45,36 @@ function PricingContent() {
 
   const handleLemonSqueezyCheckout = useCallback(
     async (planId: string, interval: 'monthly' | 'yearly') => {
-      if (!isAuthenticated || !session) {
+      if (!isAuthenticated) {
         router.push(`/signup?redirect=/pricing?plan=${planId}`)
         return
       }
 
-      const variantId = getVariantId(planId as 'pro' | 'unlimited', interval)
-      if (!variantId) {
-        alert('Payment is being configured. Please try again later.')
-        return
-      }
+      setCardError(null)
+      setCardLoading(planId)
 
-      const checkoutUrl = createCheckoutUrl(
-        variantId,
-        session.user.id,
-        session.user.email || ''
-      )
-      window.location.href = checkoutUrl
+      try {
+        const response = await fetch('/api/checkout/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planId, interval }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          setCardError(data.error || 'Failed to create checkout. Please try again.')
+          return
+        }
+
+        window.location.href = data.checkoutUrl
+      } catch {
+        setCardError('Something went wrong. Please try again.')
+      } finally {
+        setCardLoading(null)
+      }
     },
-    [isAuthenticated, session, router]
+    [isAuthenticated, router]
   )
 
   const handlePayPalCheckout = useCallback(
@@ -172,6 +185,14 @@ function PricingContent() {
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Start free, upgrade when you&apos;re ready.</p>
         </div>
 
+        {/* Card error banner */}
+        {cardError && (
+          <div className="mb-6 max-w-lg mx-auto p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{cardError}</p>
+          </div>
+        )}
+
         {/* PayPal status banner */}
         {paypalStatus === 'cancelled' && (
           <div className="mb-6 max-w-lg mx-auto p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex items-start gap-3">
@@ -264,6 +285,7 @@ function PricingContent() {
                         onClick={() =>
                           handleLemonSqueezyCheckout(plan.id, 'monthly')
                         }
+                        loading={cardLoading === plan.id}
                         icon={<CreditCard className="h-4 w-4" />}
                       >
                         Pay with Card
