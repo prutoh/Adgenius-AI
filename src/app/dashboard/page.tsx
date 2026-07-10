@@ -165,9 +165,11 @@ export default function DashboardPage() {
                 <Link href="/generate">
                   <Button className="w-full justify-start" variant="outline"><Sparkles className="h-4 w-4" />New Generation</Button>
                 </Link>
-                <Link href="/api-dashboard/api-keys">
-                  <Button className="w-full justify-start" variant="outline"><Key className="h-4 w-4" />API Access</Button>
-                </Link>
+                {(profile?.plan_id || 'free') === 'unlimited' && (
+                  <Link href="/api-dashboard/api-keys">
+                    <Button className="w-full justify-start" variant="outline"><Key className="h-4 w-4" />API Access</Button>
+                  </Link>
+                )}
                 {(profile?.plan_id || 'free') === 'pro' || (profile?.plan_id || 'free') === 'unlimited' ? (
                   <>
                     <Link href="/history">
