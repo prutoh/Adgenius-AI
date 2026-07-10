@@ -98,7 +98,6 @@ export function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {isHomePage && (
               <div className="relative" ref={themeDropdownRef}>
                 <button
                   onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
@@ -138,7 +137,6 @@ export function Navbar() {
                   </div>
                 )}
               </div>
-            )}
             <UserMenu />
           </div>
 
@@ -173,7 +171,7 @@ export function Navbar() {
                   {link.label}
                 </a>
               ))}
-              {/* Mobile Theme Toggle */}
+              {/* Theme Toggle */}
               <div className="px-3 py-2">
                 <div className="flex items-center gap-2">
                   {themeOptions.map((option) => (
