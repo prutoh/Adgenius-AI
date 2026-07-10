@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { PlanId } from '@/types'
 import { PLANS } from '@/lib/utils/constants'
 
@@ -21,10 +21,10 @@ interface InvoiceRecord {
  * Generate a sequential invoice number (INV-0001, INV-0002, etc.)
  */
 export async function generateInvoiceNumber(): Promise<string> {
-  const supabase = createServerSupabaseClient()
+  const admin = createAdminClient()
 
   // Get the latest invoice number
-  const { data: latestInvoice } = await supabase
+  const { data: latestInvoice } = await admin
     .from('invoices')
     .select('invoice_number')
     .order('created_at', { ascending: false })
@@ -59,10 +59,10 @@ export async function createInvoice(
   }
 ): Promise<InvoiceRecord | null> {
   try {
-    const supabase = createServerSupabaseClient()
+    const admin = createAdminClient()
     const invoiceNumber = await generateInvoiceNumber()
 
-    const { data, error } = await supabase
+    const { data, error } = await admin
       .from('invoices')
       .insert({
         user_id: userId,

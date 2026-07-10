@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server'
 
 /**
  * Ensures a profile row exists for the given user.
@@ -18,8 +18,9 @@ export async function ensureProfile(user: { id: string; email?: string }) {
     return profile
   }
 
-  // Profile doesn't exist — create it
-  const { data: newProfile, error } = await supabase
+  // Profile doesn't exist — create it using admin client (bypasses RLS)
+  const admin = createAdminClient()
+  const { data: newProfile, error } = await admin
     .from('profiles')
     .insert({
       id: user.id,

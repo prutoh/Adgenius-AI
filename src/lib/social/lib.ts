@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { encrypt, decrypt } from '@/lib/crypto'
 
 export type SocialPlatform = 'facebook' | 'instagram' | 'tiktok'
@@ -32,7 +32,7 @@ export async function saveSocialAccount(params: {
   instagramBusinessAccountId?: string
   facebookPageId?: string
 }): Promise<StoredSocialAccount> {
-  const supabase = createServerSupabaseClient()
+  const supabase = createAdminClient()
 
   const row = {
     user_id: params.userId,
@@ -61,7 +61,7 @@ export async function saveSocialAccount(params: {
  * Get all social accounts for a user (tokens NOT decrypted — for listing).
  */
 export async function getSocialAccounts(userId: string): Promise<StoredSocialAccount[]> {
-  const supabase = createServerSupabaseClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('social_accounts')
     .select()
@@ -81,7 +81,7 @@ export async function getDecryptedSocialAccount(
   platform: SocialPlatform,
   platformUserId?: string
 ) {
-  const supabase = createServerSupabaseClient()
+  const supabase = createAdminClient()
   let query = supabase
     .from('social_accounts')
     .select()
@@ -107,7 +107,7 @@ export async function getDecryptedSocialAccount(
  * Delete a social account.
  */
 export async function deleteSocialAccount(userId: string, accountId: string) {
-  const supabase = createServerSupabaseClient()
+  const supabase = createAdminClient()
   const { error } = await supabase
     .from('social_accounts')
     .delete()
@@ -129,7 +129,7 @@ export async function logPosting(params: {
   errorMessage?: string
   adContent: string
 }) {
-  const supabase = createServerSupabaseClient()
+  const supabase = createAdminClient()
   await supabase.from('posting_logs').insert({
     user_id: params.userId,
     social_account_id: params.socialAccountId,

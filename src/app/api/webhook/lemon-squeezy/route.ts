@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { verifyWebhookSignature, mapSubscriptionStatus, mapVariantToPlan } from '@/lib/payments/lemon-squeezy' // Note: Fixed your typo 'lemon-schurey' -> 'lemon-squeezy'
 import type { LemonSqueezyEvent } from '@/lib/payments/lemon-squeezy'
 import { sendEmail } from '@/lib/emails/client'
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = meta.custom_data.user_id
-    const supabase = createServerSupabaseClient()
+    const admin = createAdminClient()
 
     // Handle different events
     switch (meta.event_name) {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         
         if (planId) {
             // 1. Upsert subscription
-            await supabase.from('subscriptions').upsert({
+            await admin.from('subscriptions').upsert({
               user_id: userId,
               plan_id: planId,
               status: status,
@@ -52,13 +52,13 @@ export async function POST(request: NextRequest) {
 
             // 2. Update user profile plan (ONLY if active)
             if (status === 'active') {
-              await supabase
+              await admin
                 .from('profiles')
                 .update({ plan_id: planId })
                 .eq('id', userId)
 
               // 3. Fetch user name OUTSIDE the if-statement
-              const { data: profile } = await supabase
+              const { data: profile } = await admin
                 .from('profiles')
                 .select('full_name')
                 .eq('id', userId)
@@ -97,13 +97,13 @@ export async function POST(request: NextRequest) {
         case 'subscription_expired': {
           const status = mapSubscriptionStatus(data.attributes.status)
         
-        await supabase
+        await admin
           .from('subscriptions')
           .update({ status: status, updated_at: new Date().toISOString() })
           .eq('lemon_squeezy_subscription_id', data.id.toString())
 
         if (status === 'expired' || status === 'cancelled') {
-          await supabase
+          await admin
             .from('profiles')
             .update({ plan_id: 'free' })
             .eq('id', userId)

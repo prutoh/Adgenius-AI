@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server'
 import { capturePayPalOrder } from '@/lib/payments/paypal'
 import { createInvoice } from '@/lib/payments/invoices'
 import { sendEmail } from '@/lib/emails/client'
@@ -7,6 +7,7 @@ import { getSubscriptionWelcomeEmail } from '@/lib/emails/templates'
 
 export async function POST(request: NextRequest) {
   try {
+    // Use anon client for authentication (respects RLS)
     const supabase = createServerSupabaseClient()
 
     // 1. Authenticate user
@@ -45,8 +46,11 @@ export async function POST(request: NextRequest) {
     const userName = currentProfile?.full_name || 'Valued Customer'
     const userEmail = currentProfile?.email || user.email || ''
 
+    // Use admin client for all writes (bypasses RLS)
+    const admin = createAdminClient()
+
     // 5. Update user profile plan
-    await supabase
+    await admin
       .from('profiles')
       .update({ plan_id: planId, updated_at: new Date().toISOString() })
       .eq('id', user.id)
@@ -61,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing active subscription
-    const { data: existingSub } = await supabase
+    const { data: existingSub } = await admin
       .from('subscriptions')
       .select('id')
       .eq('user_id', user.id)
@@ -69,7 +73,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (existingSub) {
-      await supabase
+      await admin
         .from('subscriptions')
         .update({
           plan_id: planId,
@@ -80,7 +84,7 @@ export async function POST(request: NextRequest) {
         })
         .eq('id', existingSub.id)
     } else {
-      await supabase.from('subscriptions').insert({
+      await admin.from('subscriptions').insert({
         user_id: user.id,
         plan_id: planId,
         status: 'active',
@@ -89,7 +93,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 7. Create invoice
+    // 7. Create invoice (createInvoice already uses admin client internally)
     const invoice = await createInvoice(
       user.id,
       planId,
@@ -99,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     // Update invoice with PayPal order ID
     if (invoice) {
-      await supabase
+      await admin
         .from('invoices')
         .update({ paypal_order_id: capture.id, status: 'paid' })
         .eq('id', invoice.id)
@@ -112,8 +116,8 @@ export async function POST(request: NextRequest) {
     if (userEmail) {
       const subject =
         action === 'new'
-          ? `Welcome to AdGenius AI ${planDisplayName}! 🚀`
-          : `Upgraded to ${planDisplayName} Plan! 🎉`
+          ? `Welcome to AdGenius AI ${planDisplayName}!`
+          : `Upgraded to ${planDisplayName} Plan!`
 
       sendEmail({
         to: userEmail,
@@ -128,6 +132,8 @@ export async function POST(request: NextRequest) {
         }),
       })
     }
+
+    console.log('[PayPal Capture] Invoice created:', invoice?.invoice_number, 'for user:', user.id)
 
     return NextResponse.json({
       success: true,

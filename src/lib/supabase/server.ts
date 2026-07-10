@@ -1,6 +1,12 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
+/**
+ * Server-side Supabase client using the ANON key.
+ * Respects Row Level Security (RLS) policies.
+ * Use this for reading data scoped to the authenticated user.
+ */
 export function createServerSupabaseClient() {
   const cookieStore = cookies()
 
@@ -28,6 +34,30 @@ export function createServerSupabaseClient() {
             // This can be ignored if you have middleware refreshing sessions.
           }
         },
+      },
+    }
+  )
+}
+
+/**
+ * Admin Supabase client using the SERVICE ROLE KEY.
+ * BYPASSES Row Level Security (RLS) — use only for server-side
+ * administrative operations like creating invoices, updating plans,
+ * and webhook processing.
+ */
+export function createAdminClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceRoleKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set')
+  }
+
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceRoleKey,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
       },
     }
   )

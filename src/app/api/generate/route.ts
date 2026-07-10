@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server'
 import { generateRealEstateAd } from '@/lib/ai/gemini'
 import { PLAN_LIMITS } from '@/lib/utils/constants'
 import { ensureProfile } from '@/lib/utils/ensure-profile'
@@ -114,8 +114,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Use admin client for database writes (bypasses RLS)
+    const admin = createAdminClient()
+
     // 4. Log Usage (Do this before streaming to prevent race conditions)
-    await supabase.from('usage_logs').insert({
+    await admin.from('usage_logs').insert({
       user_id: user.id,
       generation_type: 'real_estate_ad',
     })
@@ -137,7 +140,7 @@ export async function POST(request: NextRequest) {
       async flush() {
         // Save to generations table after stream ends
         if (fullText) {
-          await supabase.from('generations').insert({
+          await admin.from('generations').insert({
             user_id: user.id,
             input_data: body as unknown as Record<string, unknown>,
             output_text: fullText,

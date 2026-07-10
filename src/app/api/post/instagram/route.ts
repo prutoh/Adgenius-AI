@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server'
 import { getDecryptedSocialAccount, logPosting, refreshMetaToken } from '@/lib/social/lib'
 import { encrypt } from '@/lib/crypto'
 
@@ -13,6 +13,7 @@ import { encrypt } from '@/lib/crypto'
 export async function POST(request: NextRequest) {
   try {
     const supabase = createServerSupabaseClient()
+    const admin = createAdminClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
       if (refreshed) {
         accessToken = refreshed.accessToken
         const newExpiresAt = new Date(Date.now() + refreshed.expiresIn * 1000).toISOString()
-        await supabase
+        await admin
           .from('social_accounts')
           .update({
             access_token_encrypted: encrypt(refreshed.accessToken),
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
       adContent: content,
     })
 
-    await supabase
+    await admin
       .from('social_accounts')
       .update({ last_used_at: new Date().toISOString() })
       .eq('id', accountId)

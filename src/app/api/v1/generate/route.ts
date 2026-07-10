@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server'
 import { createHash } from 'crypto'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
@@ -31,8 +31,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'API key has expired.' }, { status: 401 })
   }
 
-  // 4. Update last used timestamp
-  await supabase
+  // 4. Update last used timestamp (admin client to bypass RLS)
+  const admin = createAdminClient()
+  await admin
     .from('api_keys')
     .update({ last_used_at: new Date().toISOString() })
     .eq('id', keyData.id)
