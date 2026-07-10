@@ -93,6 +93,7 @@ export default function GeneratePage() {
               error={error}
               platform={undefined}
               onReset={reset}
+              planId={planId}
             />
 
             {!output && !isGenerating && !error && (

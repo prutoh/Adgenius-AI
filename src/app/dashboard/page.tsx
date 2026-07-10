@@ -12,7 +12,7 @@ import { Loader } from '@/components/ui/loader'
 import { Input } from '@/components/ui/input'
 import { CopyButton } from '@/components/generate/copy-button'
 import { getRelativeTime } from '@/lib/utils/helpers'
-import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key, Clock, Headphones, Palette, Receipt } from 'lucide-react'
+import { BarChart3, FileText, CreditCard, Sparkles, ArrowRight, ExternalLink, Key, Clock, Headphones, Palette, Receipt, Send } from 'lucide-react'
 import Link from 'next/link'
 
 interface Generation {
@@ -184,6 +184,11 @@ export default function DashboardPage() {
                     {(profile?.plan_id || 'free') === 'unlimited' && (
                       <Link href="/branding">
                         <Button className="w-full justify-start" variant="outline"><Palette className="h-4 w-4" />Custom Branding</Button>
+                      </Link>
+                    )}
+                    {(profile?.plan_id || 'free') === 'unlimited' && (
+                      <Link href="/social-accounts">
+                        <Button className="w-full justify-start" variant="outline"><Send className="h-4 w-4" />Direct Posting</Button>
                       </Link>
                     )}
                   </>

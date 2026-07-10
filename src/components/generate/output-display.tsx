@@ -5,9 +5,10 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { CopyButton } from './copy-button'
+import { PostDirectlyModal } from './post-directly-modal'
 import { PLATFORM_LABELS } from '@/types/ai'
-import type { Platform } from '@/types'
-import { CheckCircle, AlertCircle, RotateCcw } from 'lucide-react'
+import type { Platform, PlanId } from '@/types'
+import { CheckCircle, AlertCircle, RotateCcw, Send } from 'lucide-react'
 
 interface OutputDisplayProps {
   output: string
@@ -15,10 +16,12 @@ interface OutputDisplayProps {
   error: string | null
   platform?: Platform
   onReset: () => void
+  planId?: PlanId
 }
 
-export function OutputDisplay({ output, isGenerating, error, platform, onReset }: OutputDisplayProps) {
+export function OutputDisplay({ output, isGenerating, error, platform, onReset, planId }: OutputDisplayProps) {
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showPostModal, setShowPostModal] = useState(false)
 
   if (!output && !isGenerating && !error) {
     return null
@@ -56,6 +59,11 @@ export function OutputDisplay({ output, isGenerating, error, platform, onReset }
           )}
         </div>
         <div className="flex items-center gap-2">
+          {planId === 'unlimited' && output && !isGenerating && (
+            <Button variant="primary" size="sm" onClick={() => setShowPostModal(true)} icon={<Send className="h-4 w-4" />}>
+              Post Directly
+            </Button>
+          )}
           <CopyButton text={output} onSuccess={() => setShowSuccess(true)} />
           <Button variant="ghost" size="sm" onClick={onReset}>
             <RotateCcw className="h-4 w-4" />
@@ -87,6 +95,13 @@ export function OutputDisplay({ output, isGenerating, error, platform, onReset }
           </div>
         )}
       </div>
+
+      {/* Post Directly Modal */}
+      <PostDirectlyModal
+        isOpen={showPostModal}
+        onClose={() => setShowPostModal(false)}
+        content={output}
+      />
 
       {/* Character Count */}
       {output && !isGenerating && (

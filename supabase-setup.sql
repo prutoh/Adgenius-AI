@@ -277,7 +277,80 @@ CREATE INDEX idx_invoices_created_at ON public.invoices(created_at DESC);
 
 
 -- =============================================
--- 9. UTILITY FUNCTIONS
+-- 9. SOCIAL_ACCOUNTS TABLE (Unlimited plan - Direct Posting)
+-- Stores encrypted OAuth tokens for social platforms
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.social_accounts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  platform TEXT NOT NULL CHECK (platform IN ('facebook', 'instagram', 'tiktok')),
+  platform_user_id TEXT NOT NULL,
+  username TEXT NOT NULL,
+  display_name TEXT DEFAULT '',
+  access_token_encrypted TEXT NOT NULL,
+  refresh_token_encrypted TEXT,
+  token_expires_at TIMESTAMPTZ,
+  -- Meta-specific fields
+  instagram_business_account_id TEXT,
+  facebook_page_id TEXT,
+  -- Metadata
+  is_active BOOLEAN DEFAULT true,
+  last_used_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(user_id, platform, platform_user_id)
+);
+
+ALTER TABLE public.social_accounts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own social accounts" ON public.social_accounts
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own social accounts" ON public.social_accounts
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own social accounts" ON public.social_accounts
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own social accounts" ON public.social_accounts
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX idx_social_accounts_user_id ON public.social_accounts(user_id);
+
+CREATE OR REPLACE TRIGGER social_accounts_updated_at
+  BEFORE UPDATE ON public.social_accounts
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
+
+
+-- =============================================
+-- 10. POSTING_LOGS TABLE (Audit trail for direct posting)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.posting_logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  social_account_id UUID REFERENCES public.social_accounts(id) ON DELETE SET NULL,
+  platform TEXT NOT NULL CHECK (platform IN ('facebook', 'instagram', 'tiktok')),
+  platform_post_id TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'posted', 'failed')),
+  error_message TEXT,
+  ad_content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.posting_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own posting logs" ON public.posting_logs
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own posting logs" ON public.posting_logs
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE INDEX idx_posting_logs_user_id ON public.posting_logs(user_id);
+CREATE INDEX idx_posting_logs_created_at ON public.posting_logs(created_at DESC);
+
+
+-- =============================================
+-- 11. UTILITY FUNCTIONS
 -- =============================================
 
 -- Get user's monthly generation count
